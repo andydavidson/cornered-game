@@ -58,6 +58,20 @@
     return { x: cx(c) + CELL, y: cy(r), w: GAP, h: CELL * 2 + GAP };
   }
 
+  // How far a wall's hit area may extend into the cells on a given side.
+  // Zeroed out when a neighboring cell is a legal pawn-move target, so the
+  // wall's tap target never steals area from a square the player can move to.
+  function hWallPad(r: number, c: number) {
+    const before = isLegalTarget(r, c) || isLegalTarget(r, c + 1);
+    const after = isLegalTarget(r + 1, c) || isLegalTarget(r + 1, c + 1);
+    return { before: before ? 0 : WALL_PAD, after: after ? 0 : WALL_PAD };
+  }
+  function vWallPad(r: number, c: number) {
+    const before = isLegalTarget(r, c) || isLegalTarget(r + 1, c);
+    const after = isLegalTarget(r, c + 1) || isLegalTarget(r + 1, c + 1);
+    return { before: before ? 0 : WALL_PAD, after: after ? 0 : WALL_PAD };
+  }
+
   // ── Interaction handlers ─────────────────────────────────────────────────
   function handleCellClick(r: number, c: number) {
     if (!isHumanTurn() || gs.winner) return;
@@ -185,18 +199,21 @@
       IMPORTANT: pointer-events="all" is required for iOS Safari to fire click
       events on SVG elements that have no visible fill.
       Hit areas extend WALL_PAD units into each adjacent cell so they're large
-      enough to tap reliably on touch screens.
+      enough to tap reliably on touch screens — except on a side whose
+      neighboring cell is a legal pawn-move target, where padding is zeroed
+      so the wall's tap target can't steal a move square (see hWallPad/vWallPad).
     -->
     {#if isHumanTurn() && hasWallsLeft() && !gs.winner}
       {#each Array.from({ length: gs.size - 1 }, (_, i) => i) as r}
         {#each Array.from({ length: gs.size - 1 }, (_, i) => i) as c}
           {#if wallOrient === 'h' && !wallIsPlaced(r, c, 'h')}
             {@const rect = hWallRect(r, c)}
+            {@const pad = hWallPad(r, c)}
             <rect
               x={rect.x}
-              y={rect.y - WALL_PAD}
+              y={rect.y - pad.before}
               width={rect.w}
-              height={rect.h + WALL_PAD * 2}
+              height={rect.h + pad.before + pad.after}
               fill="rgba(0,0,0,0.001)"
               pointer-events="all"
               style="cursor:pointer"
@@ -211,10 +228,11 @@
           {/if}
           {#if wallOrient === 'v' && !wallIsPlaced(r, c, 'v')}
             {@const rect = vWallRect(r, c)}
+            {@const pad = vWallPad(r, c)}
             <rect
-              x={rect.x - WALL_PAD}
+              x={rect.x - pad.before}
               y={rect.y}
-              width={rect.w + WALL_PAD * 2}
+              width={rect.w + pad.before + pad.after}
               height={rect.h}
               fill="rgba(0,0,0,0.001)"
               pointer-events="all"
