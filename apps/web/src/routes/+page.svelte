@@ -133,7 +133,7 @@
 
 <style>
   .game {
-    min-height: 100svh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;

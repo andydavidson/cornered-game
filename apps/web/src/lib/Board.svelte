@@ -23,7 +23,7 @@
 
   // Derived from state
   let legalTargets = $derived(
-    (isHumanTurn() && !gs.winner) ? legalPawnMoves(state).map(p => `${p.r},${p.c}`) : []
+    (isHumanTurn() && !gs.winner) ? legalPawnMoves(gs).map(p => `${p.r},${p.c}`) : []
   );
 
   function isHumanTurn(): boolean {
@@ -95,8 +95,7 @@
     return hoveredWall !== null && hoveredWall.r === r && hoveredWall.c === c && hoveredWall.o === o;
   }
 
-  // Wall orientation toggle label
-  let orientLabel = $derived(wallOrient === 'h' ? 'Horizontal wall' : 'Vertical wall');
+
 </script>
 
 <div class="board-wrap">

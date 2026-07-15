@@ -1,5 +1,5 @@
 import type { GameState, Move, Player } from '@cornered/engine';
-import { initialState, legalMoves, applyMove, applyTimeout, legalPawnMoves, isWallLegal } from '@cornered/engine';
+import { initialState, legalMoves, applyMove, applyTimeout } from '@cornered/engine';
 import type { SessionConfig } from '@cornered/modes';
 
 function movesEqual(a: Move, b: Move): boolean {
