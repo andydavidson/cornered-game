@@ -137,8 +137,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    box-sizing: border-box;
+    width: 100%;
   }
 
   .status-bar {
@@ -150,7 +152,7 @@
     background: #1e293b;
     border: 1px solid #334155;
     border-radius: 10px;
-    padding: 0.75rem 1rem;
+    padding: 0.625rem 0.75rem;
     gap: 0.5rem;
   }
 
@@ -220,6 +222,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
   }
 
   .footer {
@@ -235,13 +238,19 @@
     padding: 0.5rem 1.25rem;
   }
 
-  .btn-primary:hover { background: #1d4ed8; }
+  /* 44×44pt minimum touch target */
+  .btn-primary, .btn-secondary {
+    min-height: 44px;
+    padding: 0 1.25rem;
+  }
+
+  @media (hover: hover) {
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-secondary:hover { background: #475569; color: #f1f5f9; }
+  }
 
   .btn-secondary {
     background: #334155;
     color: #94a3b8;
-    padding: 0.5rem 1.25rem;
   }
-
-  .btn-secondary:hover { background: #475569; color: #f1f5f9; }
 </style>

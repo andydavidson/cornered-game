@@ -224,6 +224,9 @@
     align-items: center;
     gap: 0.5rem;
     cursor: pointer;
+    /* Minimum touch target height */
+    min-height: 44px;
+    padding: 0.25rem 0;
   }
 
   .field-label {
