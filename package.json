@@ -1,0 +1,10 @@
+{
+  "name": "cornered",
+  "private": true,
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "dev": "npm run dev -w apps/web",
+    "build": "npm run build -w apps/web",
+    "test": "npm run test -w packages/engine -w packages/ai"
+  }
+}

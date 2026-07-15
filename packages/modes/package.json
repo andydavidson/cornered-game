@@ -1,0 +1,15 @@
+{
+  "name": "@cornered/modes",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@cornered/engine": "*",
+    "@cornered/ai": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}
