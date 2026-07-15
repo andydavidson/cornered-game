@@ -1,6 +1,7 @@
 <script lang="ts">
   import { wallsForSize } from '@cornered/engine';
   import type { SessionConfig, ModeType } from '@cornered/modes';
+  import AddToHomeScreenHint from '$lib/AddToHomeScreenHint.svelte';
 
   interface Props {
     onstart: (cfg: SessionConfig) => void;
@@ -141,6 +142,8 @@
 
     <button class="start-btn" onclick={handleStart}>Start game</button>
   </div>
+
+  <AddToHomeScreenHint />
 </div>
 
 <style>
