@@ -76,6 +76,10 @@
 
   let p1WallsLeft = $derived(game.state?.wallsLeft[0] ?? 0);
   let p2WallsLeft = $derived(game.state?.wallsLeft[1] ?? 0);
+
+  let showWallCounts = $state(false);
+  let wallsTotal = $derived(game.session?.gameConfig.wallsPerPlayer ?? 0);
+  let p2Name = $derived(game.session?.mode === 'vs-ai' ? 'AI' : 'P2');
 </script>
 
 {#if !game.state}
@@ -123,6 +127,18 @@
 
     <!-- Footer -->
     <footer class="footer">
+      <button
+        class="btn-secondary btn-walls"
+        aria-expanded={showWallCounts}
+        onclick={() => (showWallCounts = !showWallCounts)}
+      >
+        {#if showWallCounts}
+          <span class="wc p1">P1 {wallsTotal - p1WallsLeft} placed · {p1WallsLeft} left</span>
+          <span class="wc p2">{p2Name} {wallsTotal - p2WallsLeft} placed · {p2WallsLeft} left</span>
+        {:else}
+          Walls
+        {/if}
+      </button>
       {#if game.state.winner}
         <button class="btn-primary" onclick={() => game.init(game.session!)}>Play again</button>
       {/if}
@@ -253,4 +269,21 @@
     background: #334155;
     color: #94a3b8;
   }
+
+  .footer {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-walls {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    line-height: 1.25;
+  }
+
+  .wc.p1 { color: #60a5fa; }
+  .wc.p2 { color: #f87171; }
 </style>
