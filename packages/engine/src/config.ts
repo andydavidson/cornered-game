@@ -1,11 +1,14 @@
 import type { GameConfig, GameState } from './types.js';
+import { isValidConfig } from './validate.js';
 
 /** Wall count scales linearly with board size; default 9×9 → 10 walls. */
 export function wallsForSize(size: number): number {
   return Math.round(size * 10 / 9);
 }
 
+/** Throws if `config` is out of range (see `isValidConfig`). */
 export function initialState(config: GameConfig): GameState {
+  if (!isValidConfig(config)) throw new Error('initialState: invalid game config');
   const { size } = config;
   const mid = Math.floor(size / 2);
   return {

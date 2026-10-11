@@ -64,6 +64,10 @@ export function checkWin(state: GameState): Player | null {
   return null;
 }
 
+/**
+ * Unchecked move application. Callers must already know `move` is legal
+ * (e.g. it came from `legalMoves`). For untrusted input use `tryApplyMove`.
+ */
 export function applyMove(state: GameState, move: Move): GameState {
   if (state.winner) return state;
 
@@ -88,7 +92,13 @@ export function applyMove(state: GameState, move: Move): GameState {
   };
 }
 
+/**
+ * Applies a timeout declaration. Ignored (state returned unchanged) if the game
+ * is over or `player` is not the one to move, so stale or duplicate
+ * declarations can't skip the wrong turn or overturn a finished game.
+ */
 export function applyTimeout(state: GameState, player: Player): GameState {
+  if (state.winner !== null || player !== state.turn) return state;
   if (state.timeoutBehaviour === 'forfeit') {
     return { ...state, winner: player === 'p1' ? 'p2' : 'p1' };
   }

@@ -14,3 +14,14 @@ export { wallsForSize, initialState, defaultConfig } from './config.js';
 export { isEdgeBlocked, shortestPath, goalRow } from './graph.js';
 export { legalPawnMoves, checkWin, applyMove, applyTimeout } from './moves.js';
 export { wallsConflict, isWallLegal, legalWallMoves, legalMoves } from './walls.js';
+export {
+  MIN_SIZE,
+  MAX_SIZE,
+  MAX_TIMER_SECONDS,
+  isValidSize,
+  isValidConfig,
+  isValidWallId,
+  isValidMoveShape,
+  isMoveLegal,
+  tryApplyMove,
+} from './validate.js';

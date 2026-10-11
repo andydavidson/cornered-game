@@ -5,5 +5,9 @@ export {
   isAITurn,
   applyAIMove,
   applyHumanMove,
+  clampAggression,
+  clampDepth,
+  MIN_AI_DEPTH,
+  MAX_AI_DEPTH,
 } from './LocalVsAI.js';
 export { activePlayerLabel, applyHotseatMove } from './LocalHotseat.js';

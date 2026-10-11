@@ -18,13 +18,26 @@
       window.matchMedia('(display-mode: standalone)').matches;
   }
 
+  // Storage can throw when blocked or disabled; the hint is optional, so fail quietly.
+  function wasDismissed(): boolean {
+    try {
+      return localStorage.getItem(DISMISSED_KEY) !== null;
+    } catch {
+      return false;
+    }
+  }
+
   function dismiss() {
     visible = false;
-    localStorage.setItem(DISMISSED_KEY, '1');
+    try {
+      localStorage.setItem(DISMISSED_KEY, '1');
+    } catch {
+      // Dismissal just won't persist across visits.
+    }
   }
 
   onMount(() => {
-    if (localStorage.getItem(DISMISSED_KEY)) return;
+    if (wasDismissed()) return;
     if (isStandalone()) return;
     if (!isIosSafari()) return;
     visible = true;

@@ -1,10 +1,24 @@
-import type { GameState, Move, Player } from '@cornered/engine';
-import { legalMoves, applyMove } from '@cornered/engine';
+import type { GameState, Player } from '@cornered/engine';
+import { tryApplyMove } from '@cornered/engine';
 import { bestMove } from '@cornered/ai';
 
 /** The human always plays as p1; AI plays as p2. */
 export const HUMAN_PLAYER: Player = 'p1';
 export const AI_PLAYER: Player = 'p2';
+
+/** Search depth bounds — deeper searches can freeze the main thread. */
+export const MIN_AI_DEPTH = 1;
+export const MAX_AI_DEPTH = 4;
+
+export function clampAggression(aggression: number): number {
+  if (!Number.isFinite(aggression)) return 0.5;
+  return Math.min(1, Math.max(0, aggression));
+}
+
+export function clampDepth(depth: number): number {
+  if (!Number.isFinite(depth)) return 2;
+  return Math.min(MAX_AI_DEPTH, Math.max(MIN_AI_DEPTH, Math.round(depth)));
+}
 
 export function isAITurn(state: GameState): boolean {
   return state.turn === AI_PLAYER && state.winner === null;
@@ -20,37 +34,15 @@ export function applyAIMove(
   depth = 2,
 ): GameState {
   if (!isAITurn(state)) return state;
-  const move = bestMove(state, aggression, depth);
-  return applyMove(state, move);
+  const move = bestMove(state, clampAggression(aggression), clampDepth(depth));
+  return tryApplyMove(state, move) ?? state;
 }
 
 /**
- * Apply a human move, but only if it's the human's turn and the move is legal.
- * Returns the new state (possibly with an AI response already applied).
+ * Apply a human move, but only if it's the human's turn and the move is
+ * well-formed and legal. Otherwise returns `state` unchanged.
  */
-export function applyHumanMove(
-  state: GameState,
-  move: Move,
-  aggression: number,
-  depth = 2,
-): GameState {
-  if (state.turn !== HUMAN_PLAYER || state.winner !== null) return state;
-
-  const legal = legalMoves(state);
-  const isLegal = legal.some(m => movesEqual(m, move));
-  if (!isLegal) return state;
-
-  const afterHuman = applyMove(state, move);
-  return afterHuman;
-}
-
-function movesEqual(a: Move, b: Move): boolean {
-  if (a.type !== b.type) return false;
-  if (a.type === 'move' && b.type === 'move') {
-    return a.to.r === b.to.r && a.to.c === b.to.c;
-  }
-  if (a.type === 'wall' && b.type === 'wall') {
-    return a.r === b.r && a.c === b.c && a.o === b.o;
-  }
-  return false;
+export function applyHumanMove(state: GameState, move: unknown): GameState {
+  if (state.turn !== HUMAN_PLAYER) return state;
+  return tryApplyMove(state, move) ?? state;
 }

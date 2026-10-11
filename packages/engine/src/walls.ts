@@ -34,7 +34,9 @@ export function wallsConflict(a: WallId, b: WallId): boolean {
 export function isWallLegal(state: GameState, w: WallId): boolean {
   const { size, walls, pawns } = state;
 
-  // 1. Bounds: r,c ∈ [0, size-2]
+  // 1. Bounds: integer r,c ∈ [0, size-2], known orientation
+  if (!Number.isInteger(w.r) || !Number.isInteger(w.c)) return false;
+  if (w.o !== 'h' && w.o !== 'v') return false;
   if (w.r < 0 || w.r >= size - 1 || w.c < 0 || w.c >= size - 1) return false;
 
   // 2. No conflict with existing walls.
